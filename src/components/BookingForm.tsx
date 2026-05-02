@@ -72,7 +72,9 @@ export default function BookingForm({ selectedBrand, onSubmit, isSubmitting }: P
     setFormData(EMPTY_FORM);
   };
 
-  const inputClass = (field: string) => `input-field${errors[field] ? ' error' : ''}`;
+  // AJOUT DU PADDING pl-12 POUR ÉVITER LE BUG DE SUPERPOSITION
+  const inputClass = (field: string) => 
+    `w-full bg-[#080808] border border-white/10 text-white placeholder-white/20 pl-12 pr-4 py-4 text-sm font-inter focus:outline-none focus:border-[#D4AF37]/50 transition-colors duration-300 ${errors[field] ? 'border-red-500/50' : ''}`;
 
   return (
     <section id="booking-form" className="py-32 px-6 relative">
@@ -104,34 +106,24 @@ export default function BookingForm({ selectedBrand, onSubmit, isSubmitting }: P
           </p>
         </motion.div>
 
-        {/* Brand error */}
-        {errors.brand && (
-          <motion.div
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="mb-8 flex items-center gap-3 p-4 border border-red-500/30 bg-red-500/5"
-          >
-            <AlertCircle size={16} className="text-red-400 flex-shrink-0" />
-            <span className="text-red-400 text-sm font-inter">{errors.brand}</span>
-          </motion.div>
-        )}
+        {/* Errors & Indicators */}
+        <div className="space-y-4 mb-8">
+          {errors.brand && (
+            <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} className="flex items-center gap-3 p-4 border border-red-500/30 bg-red-500/5">
+              <AlertCircle size={16} className="text-red-400 flex-shrink-0" />
+              <span className="text-red-400 text-sm font-inter">{errors.brand}</span>
+            </motion.div>
+          )}
 
-        {/* Selected brand indicator */}
-        {selectedBrand && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            className="mb-8 flex items-center gap-3 p-4 border border-[#D4AF37]/20 bg-[#D4AF37]/5"
-          >
-            <div className="w-2 h-2 bg-[#D4AF37] rounded-full flex-shrink-0" />
-            <span className="text-[#D4AF37]/80 text-xs tracking-widest uppercase font-inter">
-              Enseigne :{' '}
-              <strong className="text-[#D4AF37]">
-                {selectedBrand === 'ACCOR' ? 'ALL — Accor Live Limitless' : 'Hilton Hotels & Resorts'}
-              </strong>
-            </span>
-          </motion.div>
-        )}
+          {selectedBrand && (
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex items-center gap-3 p-4 border border-[#D4AF37]/20 bg-[#D4AF37]/5">
+              <div className="w-2 h-2 bg-[#D4AF37] rounded-full flex-shrink-0" />
+              <span className="text-[#D4AF37]/80 text-xs tracking-widest uppercase font-inter">
+                Enseigne : <strong className="text-[#D4AF37]">{selectedBrand === 'ACCOR' ? 'ALL — Accor Live Limitless' : 'Hilton Hotels & Resorts'}</strong>
+              </span>
+            </motion.div>
+          )}
+        </div>
 
         {/* Form */}
         <motion.form
@@ -145,108 +137,50 @@ export default function BookingForm({ selectedBrand, onSubmit, isSubmitting }: P
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
             {/* Prénom */}
             <div>
-              <label className="block text-xs tracking-[0.2em] uppercase text-white/50 font-inter mb-2">
-                Prénom <span className="text-[#D4AF37]">*</span>
-              </label>
+              <label className="block text-xs tracking-[0.2em] uppercase text-white/50 font-inter mb-2">Prénom *</label>
               <div className="relative">
-                <div className="absolute left-4 top-1/2 -translate-y-1/2 text-[#D4AF37]/50 pointer-events-none">
-                  <User size={16} />
-                </div>
-                <input
-                  type="text"
-                  value={formData.prenom}
-                  onChange={(e) => set('prenom', e.target.value)}
-                  placeholder="Jean"
-                  className={inputClass('prenom')}
-                />
+                <div className="absolute left-4 top-1/2 -translate-y-1/2 text-[#D4AF37]/50 pointer-events-none z-10"><User size={16} /></div>
+                <input type="text" value={formData.prenom} onChange={(e) => set('prenom', e.target.value)} placeholder="Jean" className={inputClass('prenom')} />
               </div>
-              {errors.prenom && (
-                <p className="mt-1.5 text-red-400 text-xs font-inter flex items-center gap-1">
-                  <AlertCircle size={11} /> {errors.prenom}
-                </p>
-              )}
+              {errors.prenom && <p className="mt-1.5 text-red-400 text-xs font-inter flex items-center gap-1"><AlertCircle size={11} /> {errors.prenom}</p>}
             </div>
 
             {/* Nom */}
             <div>
-              <label className="block text-xs tracking-[0.2em] uppercase text-white/50 font-inter mb-2">
-                Nom <span className="text-[#D4AF37]">*</span>
-              </label>
+              <label className="block text-xs tracking-[0.2em] uppercase text-white/50 font-inter mb-2">Nom *</label>
               <div className="relative">
-                <div className="absolute left-4 top-1/2 -translate-y-1/2 text-[#D4AF37]/50 pointer-events-none">
-                  <User size={16} />
-                </div>
-                <input
-                  type="text"
-                  value={formData.nom}
-                  onChange={(e) => set('nom', e.target.value)}
-                  placeholder="Dupont"
-                  className={inputClass('nom')}
-                />
+                <div className="absolute left-4 top-1/2 -translate-y-1/2 text-[#D4AF37]/50 pointer-events-none z-10"><User size={16} /></div>
+                <input type="text" value={formData.nom} onChange={(e) => set('nom', e.target.value)} placeholder="Dupont" className={inputClass('nom')} />
               </div>
-              {errors.nom && (
-                <p className="mt-1.5 text-red-400 text-xs font-inter flex items-center gap-1">
-                  <AlertCircle size={11} /> {errors.nom}
-                </p>
-              )}
+              {errors.nom && <p className="mt-1.5 text-red-400 text-xs font-inter flex items-center gap-1"><AlertCircle size={11} /> {errors.nom}</p>}
             </div>
 
             {/* Date Arrivée */}
             <div>
-              <label className="block text-xs tracking-[0.2em] uppercase text-white/50 font-inter mb-2">
-                Date d&apos;Arrivée
-              </label>
+              <label className="block text-xs tracking-[0.2em] uppercase text-white/50 font-inter mb-2">Date d'Arrivée</label>
               <div className="relative">
-                <div className="absolute left-4 top-1/2 -translate-y-1/2 text-[#D4AF37]/50 pointer-events-none">
-                  <Calendar size={16} />
-                </div>
-                <input
-                  type="date"
-                  value={formData.dateArrivee}
-                  onChange={(e) => set('dateArrivee', e.target.value)}
-                  className={`${inputClass('dateArrivee')} [color-scheme:dark]`}
-                />
+                <div className="absolute left-4 top-1/2 -translate-y-1/2 text-[#D4AF37]/50 pointer-events-none z-10"><Calendar size={16} /></div>
+                <input type="date" value={formData.dateArrivee} onChange={(e) => set('dateArrivee', e.target.value)} className={`${inputClass('dateArrivee')} [color-scheme:dark]`} />
               </div>
             </div>
 
             {/* Date Départ */}
             <div>
-              <label className="block text-xs tracking-[0.2em] uppercase text-white/50 font-inter mb-2">
-                Date de Départ
-              </label>
+              <label className="block text-xs tracking-[0.2em] uppercase text-white/50 font-inter mb-2">Date de Départ</label>
               <div className="relative">
-                <div className="absolute left-4 top-1/2 -translate-y-1/2 text-[#D4AF37]/50 pointer-events-none">
-                  <Calendar size={16} />
-                </div>
-                <input
-                  type="date"
-                  value={formData.dateDepart}
-                  onChange={(e) => set('dateDepart', e.target.value)}
-                  className={`${inputClass('dateDepart')} [color-scheme:dark]`}
-                />
+                <div className="absolute left-4 top-1/2 -translate-y-1/2 text-[#D4AF37]/50 pointer-events-none z-10"><Calendar size={16} /></div>
+                <input type="date" value={formData.dateDepart} onChange={(e) => set('dateDepart', e.target.value)} className={`${inputClass('dateDepart')} [color-scheme:dark]`} />
               </div>
             </div>
 
             {/* Voyageurs */}
             <div>
-              <label className="block text-xs tracking-[0.2em] uppercase text-white/50 font-inter mb-2">
-                Nombre de Voyageurs
-              </label>
+              <label className="block text-xs tracking-[0.2em] uppercase text-white/50 font-inter mb-2">Nombre de Voyageurs</label>
               <div className="relative">
-                <div className="absolute left-4 top-1/2 -translate-y-1/2 text-[#D4AF37]/50 pointer-events-none">
-                  <Users size={16} />
-                </div>
-                <select
-                  value={formData.voyageurs}
-                  onChange={(e) => set('voyageurs', e.target.value)}
-                  className={`${inputClass('voyageurs')} appearance-none`}
-                >
+                <div className="absolute left-4 top-1/2 -translate-y-1/2 text-[#D4AF37]/50 pointer-events-none z-10"><Users size={16} /></div>
+                <select value={formData.voyageurs} onChange={(e) => set('voyageurs', e.target.value)} className={`${inputClass('voyageurs')} appearance-none`}>
                   <option value="">Sélectionner</option>
-                  {[1, 2, 3, 4, 5, 6, 7, 8].map((n) => (
-                    <option key={n} value={String(n)}>
-                      {n} {n === 1 ? 'voyageur' : 'voyageurs'}
-                    </option>
-                  ))}
+                  {[1, 2, 3, 4, 5, 6, 7, 8].map((n) => <option key={n} value={String(n)}>{n} {n === 1 ? 'voyageur' : 'voyageurs'}</option>)}
                   <option value="9+">9+ voyageurs</option>
                 </select>
               </div>
@@ -254,18 +188,10 @@ export default function BookingForm({ selectedBrand, onSubmit, isSubmitting }: P
 
             {/* Type de Chambre */}
             <div>
-              <label className="block text-xs tracking-[0.2em] uppercase text-white/50 font-inter mb-2">
-                Type de Chambre
-              </label>
+              <label className="block text-xs tracking-[0.2em] uppercase text-white/50 font-inter mb-2">Type de Chambre</label>
               <div className="relative">
-                <div className="absolute left-4 top-1/2 -translate-y-1/2 text-[#D4AF37]/50 pointer-events-none">
-                  <BedDouble size={16} />
-                </div>
-                <select
-                  value={formData.typeChambre}
-                  onChange={(e) => set('typeChambre', e.target.value)}
-                  className={`${inputClass('typeChambre')} appearance-none`}
-                >
+                <div className="absolute left-4 top-1/2 -translate-y-1/2 text-[#D4AF37]/50 pointer-events-none z-10"><BedDouble size={16} /></div>
+                <select value={formData.typeChambre} onChange={(e) => set('typeChambre', e.target.value)} className={`${inputClass('typeChambre')} appearance-none`}>
                   <option value="">Sélectionner</option>
                   <option value="Suite Royale">Suite Royale</option>
                   <option value="Suite Deluxe">Suite Deluxe</option>
@@ -276,120 +202,56 @@ export default function BookingForm({ selectedBrand, onSubmit, isSubmitting }: P
 
             {/* Email */}
             <div>
-              <label className="block text-xs tracking-[0.2em] uppercase text-white/50 font-inter mb-2">
-                Adresse Email <span className="text-[#D4AF37]">*</span>
-              </label>
+              <label className="block text-xs tracking-[0.2em] uppercase text-white/50 font-inter mb-2">Adresse Email *</label>
               <div className="relative">
-                <div className="absolute left-4 top-1/2 -translate-y-1/2 text-[#D4AF37]/50 pointer-events-none">
-                  <Mail size={16} />
-                </div>
-                <input
-                  type="email"
-                  value={formData.email}
-                  onChange={(e) => set('email', e.target.value)}
-                  placeholder="jean.dupont@email.com"
-                  className={inputClass('email')}
-                />
+                <div className="absolute left-4 top-1/2 -translate-y-1/2 text-[#D4AF37]/50 pointer-events-none z-10"><Mail size={16} /></div>
+                <input type="email" value={formData.email} onChange={(e) => set('email', e.target.value)} placeholder="jean.dupont@email.com" className={inputClass('email')} />
               </div>
-              {errors.email && (
-                <p className="mt-1.5 text-red-400 text-xs font-inter flex items-center gap-1">
-                  <AlertCircle size={11} /> {errors.email}
-                </p>
-              )}
+              {errors.email && <p className="mt-1.5 text-red-400 text-xs font-inter flex items-center gap-1"><AlertCircle size={11} /> {errors.email}</p>}
             </div>
 
             {/* Téléphone */}
             <div>
-              <label className="block text-xs tracking-[0.2em] uppercase text-white/50 font-inter mb-2">
-                Téléphone
-              </label>
+              <label className="block text-xs tracking-[0.2em] uppercase text-white/50 font-inter mb-2">Téléphone</label>
               <div className="relative">
-                <div className="absolute left-4 top-1/2 -translate-y-1/2 text-[#D4AF37]/50 pointer-events-none">
-                  <Phone size={16} />
-                </div>
-                <input
-                  type="tel"
-                  value={formData.telephone}
-                  onChange={(e) => set('telephone', e.target.value)}
-                  placeholder="+33 6 00 00 00 00"
-                  className={inputClass('telephone')}
-                />
+                <div className="absolute left-4 top-1/2 -translate-y-1/2 text-[#D4AF37]/50 pointer-events-none z-10"><Phone size={16} /></div>
+                <input type="tel" value={formData.telephone} onChange={(e) => set('telephone', e.target.value)} placeholder="+33 6 00 00 00 00" className={inputClass('telephone')} />
               </div>
             </div>
 
             {/* Discord */}
             <div className="md:col-span-2">
-              <label className="block text-xs tracking-[0.2em] uppercase text-white/50 font-inter mb-2">
-                Pseudo Discord <span className="text-[#D4AF37]">*</span>
-              </label>
+              <label className="block text-xs tracking-[0.2em] uppercase text-white/50 font-inter mb-2">Pseudo Discord *</label>
               <div className="relative">
-                <div className="absolute left-4 top-1/2 -translate-y-1/2 text-[#D4AF37]/50 pointer-events-none">
-                  <DiscordIcon />
-                </div>
-                <input
-                  type="text"
-                  value={formData.discord}
-                  onChange={(e) => set('discord', e.target.value)}
-                  placeholder="votre_pseudo"
-                  className={inputClass('discord')}
-                />
+                <div className="absolute left-4 top-1/2 -translate-y-1/2 text-[#D4AF37]/50 pointer-events-none z-10"><DiscordIcon /></div>
+                <input type="text" value={formData.discord} onChange={(e) => set('discord', e.target.value)} placeholder="votre_pseudo" className={inputClass('discord')} />
               </div>
-              {errors.discord && (
-                <p className="mt-1.5 text-red-400 text-xs font-inter flex items-center gap-1">
-                  <AlertCircle size={11} /> {errors.discord}
-                </p>
-              )}
+              {errors.discord && <p className="mt-1.5 text-red-400 text-xs font-inter flex items-center gap-1"><AlertCircle size={11} /> {errors.discord}</p>}
             </div>
 
             {/* Demandes Spéciales */}
             <div className="md:col-span-2">
-              <label className="block text-xs tracking-[0.2em] uppercase text-white/50 font-inter mb-2">
-                Demandes Spéciales
-              </label>
+              <label className="block text-xs tracking-[0.2em] uppercase text-white/50 font-inter mb-2">Demandes Spéciales</label>
               <div className="relative">
-                <div className="absolute left-4 top-4 text-[#D4AF37]/50 pointer-events-none">
-                  <MessageSquare size={16} />
-                </div>
-                <textarea
-                  value={formData.demandes}
-                  onChange={(e) => set('demandes', e.target.value)}
-                  placeholder="Occasions spéciales, préférences particulières, services additionnels..."
-                  rows={4}
-                  className="w-full bg-[#080808] border border-white/8 text-white placeholder-white/20 pl-11 pr-4 py-4 text-sm font-inter focus:outline-none focus:border-[#D4AF37]/50 transition-colors duration-300 resize-none"
-                  style={{ borderColor: 'rgba(255,255,255,0.08)' }}
-                />
+                <div className="absolute left-4 top-4 text-[#D4AF37]/50 pointer-events-none z-10"><MessageSquare size={16} /></div>
+                <textarea value={formData.demandes} onChange={(e) => set('demandes', e.target.value)} placeholder="Occasions spéciales, préférences particulières, services additionnels..." rows={4} className="w-full bg-[#080808] border border-white/10 text-white placeholder-white/20 pl-12 pr-4 py-4 text-sm font-inter focus:outline-none focus:border-[#D4AF37]/50 transition-colors duration-300 resize-none" />
               </div>
             </div>
           </div>
 
-          {/* Submit */}
           <motion.button
             type="submit"
             disabled={isSubmitting}
-            whileHover={{ scale: isSubmitting ? 1 : 1.01 }}
-            whileTap={{ scale: isSubmitting ? 1 : 0.99 }}
-            className={`w-full py-5 flex items-center justify-center gap-3 text-sm font-semibold tracking-[0.2em] uppercase transition-all duration-300 ${
-              isSubmitting
-                ? 'bg-[#D4AF37]/50 text-black/50 cursor-not-allowed'
-                : 'bg-[#D4AF37] text-black hover:shadow-[0_0_50px_rgba(212,175,55,0.35)] hover:bg-[#E8C84A]'
-            }`}
+            whileHover={{ scale: isSubmitting ? 1 : 1.005 }}
+            whileTap={{ scale: isSubmitting ? 1 : 0.995 }}
+            className={`w-full py-5 flex items-center justify-center gap-3 text-sm font-semibold tracking-[0.2em] uppercase transition-all duration-300 ${isSubmitting ? 'bg-[#D4AF37]/50 text-black/50 cursor-not-allowed' : 'bg-[#D4AF37] text-black hover:shadow-[0_0_50px_rgba(212,175,55,0.35)] hover:bg-[#E8C84A]'}`}
           >
             {isSubmitting ? (
-              <>
-                <div className="w-4 h-4 border-2 border-black/30 border-t-black rounded-full animate-spin" />
-                Envoi en cours...
-              </>
+              <><div className="w-4 h-4 border-2 border-black/30 border-t-black rounded-full animate-spin" /> Envoi en cours...</>
             ) : (
-              <>
-                <Send size={16} />
-                Envoyer Ma Demande de Réservation
-              </>
+              <><Send size={16} /> Envoyer Ma Demande de Réservation</>
             )}
           </motion.button>
-
-          <p className="text-center text-white/30 text-xs font-inter tracking-wide mt-4">
-            Vos données sont traitées de manière confidentielle par notre conciergerie privée.
-          </p>
         </motion.form>
       </div>
     </section>
